@@ -49,26 +49,17 @@ body{
 }
 .stories::-webkit-scrollbar{display:none}
 .story-chip{
-  flex:0 0 auto;
-  width:74px;
-  text-align:center;
-  font-size:12px;
-  color:var(--muted);
-
-  /* eklediğimiz sıfırlama */
-  background:transparent;
-  border:0;
-  padding:0;
-  outline:none;
+  flex:0 0 auto; width:74px; text-align:center; font-size:12px; color:var(--muted);
+  background:transparent; border:0; padding:0; outline:none; cursor:pointer;
 }
-.story-chip:focus-visible{
-  outline:2px solid var(--accent);
-  outline-offset:2px;
+.story-chip:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.story-ring{
+  width:68px; height:68px; padding:2px; border-radius:50%;
+  background: conic-gradient(from 0deg, #6ab0ff, #a873ff, #6ab0ff);
+  display:grid; place-items:center;
 }
-
-.story-avatar{
-  width:64px; height:64px; border-radius:50%; object-fit:cover; border:3px solid var(--paper);
-}
+.story-chip.me .story-ring{ background: linear-gradient(180deg,#3e455a,#3e455a); }
+.story-avatar{ width:64px; height:64px; border-radius:50%; object-fit:cover; border:0; }
 .story-name{margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 
 /* Feed */
@@ -100,43 +91,21 @@ body{
   padding-bottom: env(safe-area-inset-bottom);
 }
 .viewer.active{display:block}
-.viewer-inner{
-  height:100%; display:grid; grid-template-rows:auto 1fr auto;
-}
-.viewer-top{
-  padding:10px 12px; position:relative;
-}
-.progress{
-  display:flex; gap:6px; position:absolute; left:0; right:0; top:0; padding:10px 12px;
-}
-.seg{
-  flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden;
-}
-.seg > i{
-  display:block; height:100%; width:0%; background:#fff; transition:width .2s linear;
-}
-.viewer-meta{
-  display:flex; align-items:center; gap:10px; color:#fff;
-  text-shadow:0 1px 2px rgba(0,0,0,.4);
-}
+.viewer-inner{ height:100%; display:grid; grid-template-rows:auto 1fr auto; }
+.viewer-top{ padding:10px 12px; position:relative; }
+.progress{ display:flex; gap:6px; position:absolute; left:0; right:0; top:0; padding:10px 12px; }
+.seg{ flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden; }
+.seg > i{ display:block; height:100%; width:0%; background:#fff; transition:width .2s linear; }
+.viewer-meta{ display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
 .viewer-meta img{width:32px; height:32px; border-radius:50%; border:2px solid rgba(255,255,255,.35); object-fit:cover}
-.viewer-close{
-  margin-left:auto; appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff;
-  padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer;
-}
+.viewer-close{ margin-left:auto; appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff;
+  padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer; }
 
 /* Video alanı */
-.viewer-stage{
-  position:relative; overflow:hidden; display:grid; place-items:center;
-}
-.story-video{
-  width:100%; height:100%; object-fit:cover; max-height:100vh;
-}
-.tapzone{
-  position:absolute; top:0; bottom:0; width:50%;
-}
-.tapzone.left{left:0}
-.tapzone.right{right:0}
+.viewer-stage{ position:relative; overflow:hidden; display:grid; place-items:center; }
+.story-video{ width:100%; height:100%; object-fit:cover; max-height:100vh; background:#000; }
+.tapzone{ position:absolute; top:0; bottom:0; width:50%; }
+.tapzone.left{left:0} .tapzone.right{right:0}
 
 /* Bottom controls */
 .viewer-bottom{
@@ -145,15 +114,6 @@ body{
 }
 .ctrl{appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer}
 .small{font-size:13px; opacity:.85}
-  
-  .story-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;   /* ekranı doldursun */
-  background:#000;    /* yüklenene kadar siyah */
-}
-
-
 </style>
 </head>
 <body>
@@ -197,13 +157,7 @@ body{
     </div>
 
     <div class="viewer-stage" id="stage">
-     <video id="storyVideo"
-  playsinline webkit-playsinline
-  muted preload="metadata"
-  class="story-video">
-  <source src="assets/stories/u1/1_h264.mp4" type="video/mp4">
-  <source src="assets/stories/u1/1.webm" type="video/webm">
-</video>
+      <video id="storyVideo" playsinline webkit-playsinline muted preload="metadata" class="story-video"></video>
       <div class="tapzone left" id="tapLeft"></div>
       <div class="tapzone right" id="tapRight"></div>
     </div>
@@ -225,15 +179,16 @@ const STORIES = [
     id:"me",
     name:"Sen",
     avatar:"assets/me.jpg",
-    segments:[
-    ]
+    segments:[]
   },
   {
     id:"u1",
     name:"Peri",
     avatar:"assets/peri.jpg",
     segments:[
-      { src:"assets/stories/u1/1_h264.mp4", dur: 8, caption:"Yorum yap" }
+      // İstersen 'sources' ile birden fazla format ver:
+      // { sources:["assets/stories/u1/1_h264.mp4","assets/stories/u1/1.webm"], dur:8, caption:"Yorum yap" }
+      { src:"assets/stories/u1/1_h264.mp4", dur:8, caption:"Yorum yap" }
     ]
   },
   {
@@ -241,15 +196,14 @@ const STORIES = [
     name:"Selim",
     avatar:"assets/p3.jpg",
     segments:[
-      { src:"assets/stories/u2/1.mp4", dur: 9, caption:"Prova" }
+      { src:"assets/stories/u2/1.mp4", dur:9, caption:"Prova" }
     ]
   },
-  // istediğin kadar ekle
 ];
 
 const FEED = [
-  { user:"Peri", avatar:"assets/p6.jpg", img:"assets/p2.jpg", time:"2s", likes:42 },
-  { user:"Selim",  avatar:"assets/p3.jpg", img:"assets/p4.jpg", time:"1g", likes:87 },
+  { user:"Peri",  avatar:"assets/p6.jpg", img:"assets/p2.jpg", time:"2s", likes:42 },
+  { user:"Selim", avatar:"assets/p3.jpg", img:"assets/p4.jpg", time:"1g",  likes:87 },
 ];
 
 /* --------------------------
@@ -300,22 +254,10 @@ FEED.forEach(p=>{
 });
 
 /* --------------------------
-   4) STORY VIEWER MANTIĞI
+   4) STORY VIEWER + GÜVENLİ VIDEO YÜKLEME
 ---------------------------*/
 const viewer   = document.getElementById('viewer');
-const video = document.getElementById('storyVideo');
-
-video.addEventListener('loadedmetadata', ()=>{
-  console.log(`OK: ${video.videoWidth}x${video.videoHeight}, ${Math.round(video.duration)}s`);
-});
-video.addEventListener('error', ()=>{
-  const c = video?.error?.code; // 2:network, 3:decode, 4:src not supported
-  alert('Video hatası: '+(c||'unknown')+'  src: '+(video.currentSrc || video.src));
-});
-
-video.load();
-video.play().catch(()=>{/* autoplay engeli; dokununca oynar */});
-
+const video    = document.getElementById('storyVideo');
 const progress = document.getElementById('progress');
 const vName    = document.getElementById('vName');
 const vAvatar  = document.getElementById('vAvatar');
@@ -327,33 +269,55 @@ const btnPause = document.getElementById('btnPause');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
 
-function playStoryVideo(path){
-  video.src = path;      // örn: "assets/stories/u1/1_h264.mp4"
-  video.currentTime = 0;
-  video.muted = true;    // autoplay için sessiz başlar
-  video.load();
-  video.play()
-    .then(()=> console.log("Video başladı"))
-    .catch(err=> console.warn("Autoplay engellendi:", err));
-}
-
-// debug eventleri
-video.addEventListener('loadedmetadata', ()=>{
-  console.log(`Yüklendi: ${video.videoWidth}x${video.videoHeight}, ${Math.round(video.duration)} sn`);
-});
-video.addEventListener('error', ()=>{
-  console.error("Video hatası:", video.error);
-});
-video.addEventListener('ended', ()=>{
-  console.log("Video bitti → sıradaki story");
-  // burada nextStory() fonksiyonunu çağırabilirsin
-});
-
-
 let curStoryIndex = 0;
 let curSegIndex   = 0;
 let timerId       = null;
 let playing       = true;
+
+/* ---- küçük debug ---- */
+function toast(msg){
+  console.log('[story]', msg);
+}
+
+/* URL var mı hızlı kontrol (GitHub Pages HEAD’e izin veriyor) */
+async function exists(url){
+  try{ const r = await fetch(url, {method:'HEAD'}); return r.ok; }catch{ return false; }
+}
+
+/* Bu segment için oynatılabilir kaynağı bul ve çalıştır */
+async function tryPlaySegment(seg){
+  // 1) Eğer seg.sources varsa onu kullan
+  let candidates = Array.isArray(seg.sources) ? [...seg.sources] : [];
+
+  // 2) Yoksa seg.src’den türev oluştur (örn. 1.mp4 → 1_h264.mp4, 1.webm)
+  if(!candidates.length && seg.src){
+    candidates.push(seg.src);
+    if(seg.src.endsWith('.mp4')){
+      const base = seg.src.replace(/\.mp4$/i,'');
+      candidates.push(base + '_h264.mp4');
+      candidates.push(base + '.webm');
+    }
+  }
+
+  // 3) Sırayla dene
+  for(const url of candidates){
+    if(!(await exists(url))) { toast('bulunamadı: '+url); continue; }
+    // kaynakları <source> ile set etmek istemezsek direkt src veriyoruz:
+    video.src = url;
+    video.currentTime = 0;
+    video.muted = true;
+    try{
+      await video.play();
+      toast('oynatılıyor: '+url);
+      return true;
+    }catch(e){
+      toast('autoplay engeli: '+url);
+      // kullanıcı tıklayınca başlayacak; yine de bu kaynağı kabul edelim
+      return true;
+    }
+  }
+  return false;
+}
 
 function findStoryIndexById(id){
   return STORIES.findIndex(s=>s.id===id);
@@ -378,7 +342,7 @@ function closeViewer(){
 
 btnClose.onclick = closeViewer;
 
-function loadCurrentSegment(first=false){
+async function loadCurrentSegment(first=false){
   const story = STORIES[curStoryIndex];
   const segs  = story.segments;
   const seg   = segs[curSegIndex];
@@ -394,16 +358,20 @@ function loadCurrentSegment(first=false){
 
   // video
   clearTimer();
-  video.src = seg.src;
-  video.currentTime = 0;
-  video.muted = video.muted ?? true;
   playing = true;
   btnPause.textContent = '⏸︎ Duraklat';
-  video.play().catch(()=>{ /* autoplay engeliyse kullanıcı dokununca başlayacak */ });
 
-  // emniyet kemeri: video “ended” gelmezse süreye göre ilerlet
+  const ok = await tryPlaySegment(seg);
+  if(!ok){
+    alert('Video yüklenemedi (yol/codec). Lütfen H.264 + AAC yüklendiğinden emin ol.');
+    nextSegment(); // geç
+    return;
+  }
+
   video.onended = nextSegment;
-  startTimer(seg.dur * 1000);
+
+  // emniyet kemeri: video ended gelmezse süreye göre
+  startTimer((seg.dur || 7) * 1000);
 }
 
 function renderProgress(total, activeIndex){
@@ -506,4 +474,3 @@ document.getElementById('stage').addEventListener('touchend', ()=>{ startY=null;
 </script>
 </body>
 </html>
-
