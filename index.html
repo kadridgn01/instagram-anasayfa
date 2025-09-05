@@ -197,11 +197,13 @@ body{
     </div>
 
     <div class="viewer-stage" id="stage">
-      <video id="storyVideo"
+     <video id="storyVideo"
   playsinline webkit-playsinline
   muted preload="metadata"
-  poster="assets/poster.jpg"
-  class="story-video"></video>
+  class="story-video">
+  <source src="assets/stories/u1/1_h264.mp4" type="video/mp4">
+  <source src="assets/stories/u1/1.webm" type="video/webm">
+</video>
       <div class="tapzone left" id="tapLeft"></div>
       <div class="tapzone right" id="tapRight"></div>
     </div>
@@ -302,6 +304,18 @@ FEED.forEach(p=>{
 ---------------------------*/
 const viewer   = document.getElementById('viewer');
 const video = document.getElementById('storyVideo');
+
+video.addEventListener('loadedmetadata', ()=>{
+  console.log(`OK: ${video.videoWidth}x${video.videoHeight}, ${Math.round(video.duration)}s`);
+});
+video.addEventListener('error', ()=>{
+  const c = video?.error?.code; // 2:network, 3:decode, 4:src not supported
+  alert('Video hatası: '+(c||'unknown')+'  src: '+(video.currentSrc || video.src));
+});
+
+video.load();
+video.play().catch(()=>{/* autoplay engeli; dokununca oynar */});
+
 const progress = document.getElementById('progress');
 const vName    = document.getElementById('vName');
 const vAvatar  = document.getElementById('vAvatar');
