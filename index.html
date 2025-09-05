@@ -1,1 +1,453 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Akış — Hikâyeler</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12151c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+
+<style>
+:root{
+  --bg:#0f1115; --paper:#12151c; --ink:#e7e9ee; --muted:#9aa3af;
+  --accent:#5da9ff; --border:#1f2330; --soft:#181c25; --radius:14px;
+  --maxw:600px; --topbar-h:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",sans-serif}
+a{color:var(--accent);text-decoration:none}
+
+/* Topbar */
+.topbar{
+  position:fixed; inset:0 0 auto 0; z-index:50;
+  height: calc(var(--topbar-h) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  background:#0e121b; border-bottom:1px solid var(--border);
+  display:flex; align-items:flex-end;
+}
+.row{max-width:var(--maxw); height:var(--topbar-h); margin:0 auto; width:100%;
+  display:flex; align-items:center; justify-content:space-between; padding:0 16px;}
+.brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px;}
+.logo{height:28px}
+
+/* Sayfa paddings */
+body{
+  padding-top: calc(var(--topbar-h) + env(safe-area-inset-top));
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+}
+
+/* Stories bar */
+.stories{
+  max-width:var(--maxw); margin:0 auto; padding:10px 12px;
+  display:flex; gap:12px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.stories::-webkit-scrollbar{display:none}
+.story-chip{
+  flex:0 0 auto; width:74px; text-align:center; font-size:12px; color:var(--muted);
+}
+.story-ring{
+  width:68px; height:68px; padding:2px; border-radius:50%;
+  background: conic-gradient(from 0deg, #6ab0ff, #a873ff, #6ab0ff);
+  display:grid; place-items:center;
+}
+.story-chip.me .story-ring{ background: linear-gradient(180deg,#3e455a,#3e455a); }
+.story-avatar{
+  width:64px; height:64px; border-radius:50%; object-fit:cover; border:3px solid var(--paper);
+}
+.story-name{margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+/* Feed */
+.feed{max-width:var(--maxw); margin:0 auto; padding:0 12px 16px; display:flex; flex-direction:column; gap:16px}
+.card{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden}
+.card .head{display:flex; align-items:center; gap:10px; padding:10px}
+.card .head img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--soft)}
+.card .head .user{font-weight:600}
+.card .head .time{margin-left:auto;color:var(--muted);font-size:12px}
+.card .media{width:100%; max-height:420px; object-fit:cover; display:block}
+.card .actions{display:flex; gap:10px; padding:10px 12px}
+.icon{cursor:pointer; user-select:none; font-size:20px}
+
+/* Bottom bar */
+.bottombar{
+  position:fixed; left:10px; right:10px; bottom: calc(env(safe-area-inset-bottom) + 8px);
+  height:58px; background:var(--paper); border:1px solid var(--border); border-radius:14px;
+  display:flex; justify-content:space-around; align-items:center; z-index:30;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.nav-item{display:flex; flex-direction:column; align-items:center; font-size:20px}
+.nav-item span{font-size:12px; color:var(--muted); margin-top:2px}
+
+/* STORY VIEWER (modal) */
+.viewer{
+  position:fixed; inset:0; z-index:100; display:none;
+  background:#000;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.viewer.active{display:block}
+.viewer-inner{
+  height:100%; display:grid; grid-template-rows:auto 1fr auto;
+}
+.viewer-top{
+  padding:10px 12px; position:relative;
+}
+.progress{
+  display:flex; gap:6px; position:absolute; left:0; right:0; top:0; padding:10px 12px;
+}
+.seg{
+  flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden;
+}
+.seg > i{
+  display:block; height:100%; width:0%; background:#fff; transition:width .2s linear;
+}
+.viewer-meta{
+  display:flex; align-items:center; gap:10px; color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+.viewer-meta img{width:32px; height:32px; border-radius:50%; border:2px solid rgba(255,255,255,.35); object-fit:cover}
+.viewer-close{
+  margin-left:auto; appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff;
+  padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer;
+}
+
+/* Video alanı */
+.viewer-stage{
+  position:relative; overflow:hidden; display:grid; place-items:center;
+}
+.story-video{
+  width:100%; height:100%; object-fit:cover; max-height:100vh;
+}
+.tapzone{
+  position:absolute; top:0; bottom:0; width:50%;
+}
+.tapzone.left{left:0}
+.tapzone.right{right:0}
+
+/* Bottom controls */
+.viewer-bottom{
+  display:flex; align-items:center; justify-content:space-between; padding:10px 12px; color:#fff;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.35));
+}
+.ctrl{appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer}
+.small{font-size:13px; opacity:.85}
+
+</style>
+</head>
+<body>
+
+<!-- TOP -->
+<div class="topbar">
+  <div class="row">
+    <div class="brand">
+      <img src="assets/logo.png" class="logo" alt="logo">
+      <span>Akış</span>
+    </div>
+  </div>
+</div>
+
+<!-- STORIES -->
+<section class="stories" id="stories"></section>
+
+<!-- FEED -->
+<section class="feed" id="feed"></section>
+
+<!-- BOTTOM NAV -->
+<nav class="bottombar">
+  <a href="#" class="nav-item">🏠<span>Ana Sayfa</span></a>
+  <a href="#" class="nav-item">🔍<span>Arama</span></a>
+  <a href="#" class="nav-item">👤<span>Profil</span></a>
+</nav>
+
+<!-- STORY VIEWER MODAL -->
+<div class="viewer" id="viewer" aria-hidden="true">
+  <div class="viewer-inner">
+    <div class="viewer-top">
+      <div class="progress" id="progress"></div>
+      <div class="viewer-meta">
+        <img id="vAvatar" src="" alt="">
+        <div>
+          <div id="vName" style="font-weight:700"></div>
+          <div id="vTime" class="small">şimdi</div>
+        </div>
+        <button class="viewer-close" id="btnClose">✕</button>
+      </div>
+    </div>
+
+    <div class="viewer-stage" id="stage">
+      <video id="v" class="story-video" playsinline webkit-playsinline muted></video>
+      <div class="tapzone left" id="tapLeft"></div>
+      <div class="tapzone right" id="tapRight"></div>
+    </div>
+
+    <div class="viewer-bottom">
+      <button class="ctrl" id="btnMute">🔇 Ses</button>
+      <div class="small" id="vCaption"></div>
+      <button class="ctrl" id="btnPause">⏸︎ Duraklat</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* --------------------------
+   1) VERİ: HİKÂYELER & FEED
+---------------------------*/
+const STORIES = [
+  {
+    id:"me",
+    name:"Sen",
+    avatar:"assets/me.jpg",
+    segments:[
+      { src:"assets/stories/me/1.mp4", dur: 7, caption:"" }
+    ]
+  },
+  {
+    id:"u1",
+    name:"Dursun",
+    avatar:"assets/p6.jpg",
+    segments:[
+      { src:"assets/stories/u1/1.mp4", dur: 8, caption:"Rize günü" },
+      { src:"assets/stories/u1/2.mp4", dur: 8, caption:"Sahil" }
+    ]
+  },
+  {
+    id:"u2",
+    name:"Güneş",
+    avatar:"assets/p3.jpg",
+    segments:[
+      { src:"assets/stories/u2/1.mp4", dur: 9, caption:"Prova" }
+    ]
+  },
+  // istediğin kadar ekle
+];
+
+const FEED = [
+  { user:"Dursun", avatar:"assets/p6.jpg", img:"assets/p2.jpg", time:"2s", likes:42 },
+  { user:"Güneş",  avatar:"assets/p3.jpg", img:"assets/p4.jpg", time:"1g", likes:87 },
+];
+
+/* --------------------------
+   2) STORIES RENDER
+---------------------------*/
+const $stories = document.getElementById('stories');
+STORIES.forEach(s=>{
+  const chip = document.createElement('button');
+  chip.className = 'story-chip' + (s.id==='me' ? ' me':'');
+  chip.setAttribute('aria-label', s.name + ' hikâyeleri');
+  chip.innerHTML = `
+    <div class="story-ring">
+      <img class="story-avatar" src="${s.avatar}" alt="${s.name}">
+    </div>
+    <div class="story-name">${s.name}</div>
+  `;
+  chip.onclick = ()=> openViewerByStoryId(s.id);
+  $stories.appendChild(chip);
+});
+
+/* --------------------------
+   3) FEED RENDER
+---------------------------*/
+const $feed = document.getElementById('feed');
+FEED.forEach(p=>{
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="head">
+      <img src="${p.avatar}" alt="${p.user}">
+      <div class="user">${p.user}</div>
+      <div class="time">${p.time}</div>
+    </div>
+    <img class="media" src="${p.img}" alt="">
+    <div class="actions">
+      <span class="icon like">❤️</span>
+      <span class="icon">💬</span>
+      <span class="icon">↗</span>
+    </div>
+  `;
+  const likeBtn = card.querySelector('.like');
+  let liked=false, likes=p.likes||0;
+  likeBtn.onclick=()=>{
+    liked=!liked; likes += liked?1:-1;
+    likeBtn.textContent = liked ? '💖' : '❤️';
+  };
+  $feed.appendChild(card);
+});
+
+/* --------------------------
+   4) STORY VIEWER MANTIĞI
+---------------------------*/
+const viewer   = document.getElementById('viewer');
+const video    = document.getElementById('v');
+const progress = document.getElementById('progress');
+const vName    = document.getElementById('vName');
+const vAvatar  = document.getElementById('vAvatar');
+const vTime    = document.getElementById('vTime');
+const vCaption = document.getElementById('vCaption');
+const btnClose = document.getElementById('btnClose');
+const btnMute  = document.getElementById('btnMute');
+const btnPause = document.getElementById('btnPause');
+const tapLeft  = document.getElementById('tapLeft');
+const tapRight = document.getElementById('tapRight');
+
+let curStoryIndex = 0;
+let curSegIndex   = 0;
+let timerId       = null;
+let playing       = true;
+
+function findStoryIndexById(id){
+  return STORIES.findIndex(s=>s.id===id);
+}
+
+function openViewerByStoryId(id){
+  curStoryIndex = Math.max(0, findStoryIndexById(id));
+  curSegIndex   = 0;
+  viewer.classList.add('active');
+  viewer.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow='hidden';
+  loadCurrentSegment(true);
+}
+
+function closeViewer(){
+  viewer.classList.remove('active');
+  viewer.setAttribute('aria-hidden','true');
+  clearTimer();
+  try { video.pause(); } catch(e){}
+  document.documentElement.style.overflow='';
+}
+
+btnClose.onclick = closeViewer;
+
+function loadCurrentSegment(first=false){
+  const story = STORIES[curStoryIndex];
+  const segs  = story.segments;
+  const seg   = segs[curSegIndex];
+
+  // meta
+  vName.textContent = story.name;
+  vAvatar.src = story.avatar;
+  vTime.textContent = 'şimdi';
+  vCaption.textContent = seg.caption || '';
+
+  // progress bar
+  renderProgress(segs.length, curSegIndex);
+
+  // video
+  clearTimer();
+  video.src = seg.src;
+  video.currentTime = 0;
+  video.muted = video.muted ?? true;
+  playing = true;
+  btnPause.textContent = '⏸︎ Duraklat';
+  video.play().catch(()=>{ /* autoplay engeliyse kullanıcı dokununca başlayacak */ });
+
+  // emniyet kemeri: video “ended” gelmezse süreye göre ilerlet
+  video.onended = nextSegment;
+  startTimer(seg.dur * 1000);
+}
+
+function renderProgress(total, activeIndex){
+  progress.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const seg = document.createElement('div');
+    seg.className='seg';
+    seg.innerHTML = `<i style="width:${i < activeIndex ? 100 : (i===activeIndex?0:0)}%"></i>`;
+    progress.appendChild(seg);
+  }
+}
+
+function startTimer(ms){
+  const start = performance.now();
+  const segBar = progress.children[curSegIndex].firstElementChild;
+  function tick(now){
+    const elapsed = now - start;
+    const pct = Math.min(100, (elapsed / ms) * 100);
+    segBar.style.width = pct + '%';
+    if(pct >= 100){ nextSegment(); return; }
+    timerId = requestAnimationFrame(tick);
+  }
+  timerId = requestAnimationFrame(tick);
+}
+function clearTimer(){ if(timerId){ cancelAnimationFrame(timerId); timerId=null; } }
+
+function nextSegment(){
+  const story = STORIES[curStoryIndex];
+  if(curSegIndex < story.segments.length - 1){
+    curSegIndex++;
+    loadCurrentSegment();
+  }else{
+    nextStory();
+  }
+}
+function prevSegment(){
+  if(curSegIndex > 0){
+    curSegIndex--;
+    loadCurrentSegment();
+  }else{
+    prevStory(true);
+  }
+}
+function nextStory(){
+  if(curStoryIndex < STORIES.length - 1){
+    curStoryIndex++; curSegIndex=0; loadCurrentSegment(true);
+  }else{
+    closeViewer();
+  }
+}
+function prevStory(fromHead=false){
+  if(curStoryIndex > 0){
+    curStoryIndex--; curSegIndex = fromHead ? STORIES[curStoryIndex].segments.length-1 : 0;
+    loadCurrentSegment(true);
+  }
+}
+
+/* Tap bölgeleri */
+tapRight.addEventListener('click', ()=> nextSegment());
+tapLeft .addEventListener('click',  ()=> prevSegment());
+
+/* Pause / Play */
+btnPause.onclick = ()=>{
+  if(playing){
+    video.pause(); clearTimer(); playing=false; btnPause.textContent='▶︎ Oynat';
+  }else{
+    video.play(); startTimer( (STORIES[curStoryIndex].segments[curSegIndex].dur || 7) * 1000 ); playing=true; btnPause.textContent='⏸︎ Duraklat';
+  }
+};
+
+/* Mute */
+btnMute.onclick = ()=>{
+  video.muted = !video.muted;
+  btnMute.textContent = video.muted ? '🔇 Ses' : '🔊 Ses';
+};
+
+/* Klavye (desktop) */
+document.addEventListener('keydown', (e)=>{
+  if(!viewer.classList.contains('active')) return;
+  if(e.key==='ArrowRight') nextSegment();
+  if(e.key==='ArrowLeft')  prevSegment();
+  if(e.key==='Escape')     closeViewer();
+  if(e.key===' ')          btnPause.click();
+  if(e.key==='m' || e.key==='M') btnMute.click();
+});
+
+/* Touch swipe to close (aşağı çek) */
+let startY=null;
+document.getElementById('stage').addEventListener('touchstart', (e)=>{ startY = e.touches[0].clientY; }, {passive:true});
+document.getElementById('stage').addEventListener('touchmove', (e)=>{
+  if(startY===null) return;
+  const dy = e.touches[0].clientY - startY;
+  if(dy > 90){ closeViewer(); startY=null; }
+}, {passive:true});
+document.getElementById('stage').addEventListener('touchend', ()=>{ startY=null; });
+
+/* Dışarıdan çağırmak istersen:
+   openViewerByStoryId('u1');
+*/
+</script>
+</body>
+</html>
 
