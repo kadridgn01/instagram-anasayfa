@@ -145,6 +145,14 @@ body{
 }
 .ctrl{appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer}
 .small{font-size:13px; opacity:.85}
+  
+  .story-video{
+  width:100%;
+  height:100%;
+  object-fit:cover;   /* ekranı doldursun */
+  background:#000;    /* yüklenene kadar siyah */
+}
+
 
 </style>
 </head>
@@ -189,7 +197,11 @@ body{
     </div>
 
     <div class="viewer-stage" id="stage">
-      <video id="v" class="story-video" playsinline webkit-playsinline muted></video>
+      <video id="storyVideo"
+  playsinline webkit-playsinline
+  muted preload="metadata"
+  poster="assets/poster.jpg"
+  class="story-video"></video>
       <div class="tapzone left" id="tapLeft"></div>
       <div class="tapzone right" id="tapRight"></div>
     </div>
@@ -289,7 +301,7 @@ FEED.forEach(p=>{
    4) STORY VIEWER MANTIĞI
 ---------------------------*/
 const viewer   = document.getElementById('viewer');
-const video    = document.getElementById('v');
+const video = document.getElementById('storyVideo');
 const progress = document.getElementById('progress');
 const vName    = document.getElementById('vName');
 const vAvatar  = document.getElementById('vAvatar');
@@ -300,6 +312,29 @@ const btnMute  = document.getElementById('btnMute');
 const btnPause = document.getElementById('btnPause');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
+
+function playStoryVideo(path){
+  video.src = path;      // örn: "assets/stories/u1/1_h264.mp4"
+  video.currentTime = 0;
+  video.muted = true;    // autoplay için sessiz başlar
+  video.load();
+  video.play()
+    .then(()=> console.log("Video başladı"))
+    .catch(err=> console.warn("Autoplay engellendi:", err));
+}
+
+// debug eventleri
+video.addEventListener('loadedmetadata', ()=>{
+  console.log(`Yüklendi: ${video.videoWidth}x${video.videoHeight}, ${Math.round(video.duration)} sn`);
+});
+video.addEventListener('error', ()=>{
+  console.error("Video hatası:", video.error);
+});
+video.addEventListener('ended', ()=>{
+  console.log("Video bitti → sıradaki story");
+  // burada nextStory() fonksiyonunu çağırabilirsin
+});
+
 
 let curStoryIndex = 0;
 let curSegIndex   = 0;
