@@ -114,6 +114,51 @@ body{
 }
 .ctrl{appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer}
 .small{font-size:13px; opacity:.85}
+
+/* === STORY FULLSCREEN PATCH === */
+.viewer{
+  position: fixed; inset: 0; z-index: 100;
+  background:#000;
+  padding: 0;
+}
+.viewer-inner{ position: relative; height: 100%; }
+.viewer-stage{
+  position: absolute; inset: 0;
+  height: 100svh;
+  overflow: hidden; display: grid; place-items: center;
+}
+.story-video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit: cover;
+  object-position: center;
+  background:#000;
+}
+.viewer-top,
+.viewer-bottom{
+  position: absolute; left:0; right:0; z-index: 2;
+  pointer-events: none;
+}
+.viewer-top{
+  top: 0;
+  padding: 10px 12px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
+}
+.viewer-bottom{
+  bottom: 0;
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(0deg, rgba(0,0,0,.55), transparent);
+}
+.viewer-top *,.viewer-bottom *{ pointer-events:auto; }
+.progress{
+  position: absolute; left:0; right:0;
+  top: calc(env(safe-area-inset-top, 0px) + 6px);
+  padding: 0 12px;
+  display:flex; gap:6px;
+}
+/* === END PATCH === */
 </style>
 </head>
 <body>
