@@ -545,6 +545,39 @@ document.getElementById('stage').addEventListener('touchmove', (e)=>{
 }, {passive:true});
 document.getElementById('stage').addEventListener('touchend', ()=>{ startY=null; });
 
+function nextSegment(){
+  const story = STORIES[curStoryIndex];
+  if(curSegIndex < story.segments.length - 1){
+    curSegIndex++;
+    loadCurrentSegment();
+  }else{
+    nextStory();
+  }
+}
+function prevSegment(){
+  if(curSegIndex > 0){
+    curSegIndex--;
+    loadCurrentSegment();
+  }else{
+    prevStory(true);
+  }
+}
+function nextStory(){
+  if(curStoryIndex < STORIES.length - 1){
+    curStoryIndex++; curSegIndex=0;
+    loadCurrentSegment(true);
+  }else{
+    closeViewer();
+  }
+}
+function prevStory(fromHead=false){
+  if(curStoryIndex > 0){
+    curStoryIndex--;
+    curSegIndex = fromHead ? STORIES[curStoryIndex].segments.length-1 : 0;
+    loadCurrentSegment(true);
+  }
+}
+
 /* Dışarıdan çağırmak istersen:
    openViewerByStoryId('u1');
 */
