@@ -23,41 +23,27 @@ html,body{margin:0;background:var(--bg);color:var(--ink);
 a{color:var(--accent);text-decoration:none}
 
 /* Topbar */
-.topbar{
-  position:fixed; inset:0 0 auto 0; z-index:50;
+.topbar{ position:fixed; inset:0 0 auto 0; z-index:50;
   height: calc(var(--topbar-h) + env(safe-area-inset-top));
   padding-top: env(safe-area-inset-top);
   background:#0e121b; border-bottom:1px solid var(--border);
-  display:flex; align-items:flex-end;
-}
+  display:flex; align-items:flex-end; }
 .row{max-width:var(--maxw); height:var(--topbar-h); margin:0 auto; width:100%;
   display:flex; align-items:center; justify-content:space-between; padding:0 16px;}
 .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px;}
 .logo{height:28px}
-
-/* Sayfa paddings */
-body{
-  padding-top: calc(var(--topbar-h) + env(safe-area-inset-top));
-  padding-bottom: calc(90px + env(safe-area-inset-bottom));
-}
+body{ padding-top: calc(var(--topbar-h) + env(safe-area-inset-top));
+  padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
 
 /* Stories bar */
-.stories{
-  max-width:var(--maxw); margin:0 auto; padding:10px 12px;
-  display:flex; gap:12px; overflow-x:auto; -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-}
+.stories{ max-width:var(--maxw); margin:0 auto; padding:10px 12px;
+  display:flex; gap:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .stories::-webkit-scrollbar{display:none}
-.story-chip{
-  flex:0 0 auto; width:74px; text-align:center; font-size:12px; color:var(--muted);
-  background:transparent; border:0; padding:0; outline:none; cursor:pointer;
-}
+.story-chip{ flex:0 0 auto; width:74px; text-align:center; font-size:12px; color:var(--muted);
+  background:transparent; border:0; padding:0; outline:none; cursor:pointer; }
 .story-chip:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
-.story-ring{
-  width:68px; height:68px; padding:2px; border-radius:50%;
-  background: conic-gradient(from 0deg, #6ab0ff, #a873ff, #6ab0ff);
-  display:grid; place-items:center;
-}
+.story-ring{ width:68px; height:68px; padding:2px; border-radius:50%;
+  background: conic-gradient(from 0deg, #6ab0ff, #a873ff, #6ab0ff); display:grid; place-items:center; }
 .story-chip.me .story-ring{ background: linear-gradient(180deg,#3e455a,#3e455a); }
 .story-avatar{ width:64px; height:64px; border-radius:50%; object-fit:cover; border:0; }
 .story-name{margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
@@ -74,12 +60,10 @@ body{
 .icon{cursor:pointer; user-select:none; font-size:20px}
 
 /* Bottom bar */
-.bottombar{
-  position:fixed; left:10px; right:10px; bottom: calc(env(safe-area-inset-bottom) + 8px);
+.bottombar{ position:fixed; left:10px; right:10px; bottom: calc(env(safe-area-inset-bottom) + 8px);
   height:58px; background:var(--paper); border:1px solid var(--border); border-radius:14px;
   display:flex; justify-content:space-around; align-items:center; z-index:30;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-}
+  box-shadow: 0 10px 30px rgba(0,0,0,.35); }
 .nav-item{display:flex; flex-direction:column; align-items:center; font-size:20px}
 .nav-item span{font-size:12px; color:var(--muted); margin-top:2px}
 
@@ -92,46 +76,40 @@ body{
 .tapzone{ position:absolute; top:0; bottom:0; width:50%; }
 .tapzone.left{left:0} .tapzone.right{right:0}
 
-.viewer-top, .viewer-bottom{
-  position:absolute; left:0; right:0; z-index:2; pointer-events:none;
-}
-.viewer-top{
-  top:0; padding:10px 12px;
-  padding-top: calc(10px + env(safe-area-inset-top, 0px));
-  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
-}
-.viewer-bottom{
-  bottom:0; padding:10px 12px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(0deg, rgba(0,0,0,.55), transparent);
-}
+.viewer-top, .viewer-bottom{ position:absolute; left:0; right:0; z-index:2; pointer-events:none; }
+.viewer-top{ top:0; padding:10px 12px; padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent); display:flex; flex-direction:column; gap:6px; }
+.viewer-bottom{ bottom:0; padding:10px 12px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); }
 .viewer-top *,.viewer-bottom *{ pointer-events:auto; }
 
-/* header */
-.progress{ position:absolute; left:0; right:0; top:calc(env(safe-area-inset-top, 0px) + 4px); padding:0 12px; display:flex; gap:6px; height:3px; }
+.progress{ position:relative; display:flex; gap:6px; height:3px; }
 .seg{ flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden; }
 .seg > i{ display:block; height:100%; width:0%; background:#fff; transition:width .2s linear; }
 
-.viewer-meta{ display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+.viewer-meta{ display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); margin-top:4px; }
 .viewer-meta img{ width:40px; height:40px; border-radius:50%; border:2px solid rgba(255,255,255,.35); object-fit:cover }
 #vName{ font-size:16px; font-weight:700; }
 #vTime{ font-size:13px; opacity:.8; }
 
 /* alt: yorum kapsülü */
 .commentbar{ display:flex; justify-content:center; align-items:center; gap:12px; }
-.comment-pill{
-  appearance:none; border:0; cursor:pointer; padding:10px 14px; border-radius:999px;
-  font-weight:700; font-size:14px; color:#e7e9ee; background:rgba(0,0,0,.35); backdrop-filter: blur(6px);
-}
+.comment-pill{ appearance:none; border:0; cursor:pointer; padding:10px 14px; border-radius:999px;
+  font-weight:700; font-size:14px; color:#e7e9ee; background:rgba(0,0,0,.35); backdrop-filter: blur(6px);}
 .comment-pill:active{ transform:translateY(1px); }
 
-/* küçük ses bildirimi (opsiyonel) */
-.sound-toast{
-  position:absolute; left:12px; bottom:calc(70px + env(safe-area-inset-bottom, 0px));
+/* küçük ses bildirimi */
+.sound-toast{ position:absolute; left:12px; bottom:calc(70px + env(safe-area-inset-bottom, 0px));
   background:rgba(0,0,0,.6); color:#fff; padding:8px 10px; border-radius:10px;
-  font-size:12px; opacity:0; pointer-events:none; transition:opacity .25s;
-}
+  font-size:12px; opacity:0; pointer-events:none; transition:opacity .25s; }
 .sound-toast.show{ opacity:1; }
+
+/* ses + kapat butonları */
+.viewer-sound,
+.viewer-close{ appearance:none; border:0; cursor:pointer; background:rgba(0,0,0,.35); color:#fff;
+  padding:8px 10px; border-radius:10px; font-weight:700; }
+.viewer-sound{ margin-left:auto; }
+.viewer-close{ margin-left:8px; }
 </style>
 </head>
 <body>
@@ -170,6 +148,7 @@ body{
           <div id="vName"></div>
           <div id="vTime" class="small">şimdi</div>
         </div>
+        <button class="viewer-sound" id="btnSound" aria-label="Sesi aç/kapat">🔇</button>
         <button class="viewer-close" id="btnClose">✕</button>
       </div>
     </div>
@@ -187,9 +166,6 @@ body{
 </div>
 
 <script>
-/* --------------------------
-   1) VERİ: HİKÂYELER & FEED
----------------------------*/
 const STORIES = [
   { id:"me",  name:"Sen",  avatar:"assets/me.jpg",  segments:[] },
   { id:"u1",  name:"Peri", avatar:"assets/peri.jpg",
@@ -204,59 +180,32 @@ const FEED = [
   { user:"okanerdemt", avatar:"assets/okan-av.jpg", img:"assets/okan.jpg", time:"1g",  likes:87 },
 ];
 
-/* --------------------------
-   2) STORIES RENDER
----------------------------*/
 const $stories = document.getElementById('stories');
 STORIES.forEach(s=>{
   const chip = document.createElement('button');
   chip.className = 'story-chip' + (s.id==='me' ? ' me':'');
-  chip.setAttribute('aria-label', s.name + ' hikâyeleri');
   chip.innerHTML = `
-    <div class="story-ring">
-      <img class="story-avatar" src="${s.avatar}" alt="${s.name}">
-    </div>
-    <div class="story-name">${s.name}</div>
-  `;
-  chip.onclick = ()=>{
-    if (s.segments && s.segments.length) openViewerByStoryId(s.id);
-    else alert('Bu kullanıcıda hikâye yok.');
-  };
+    <div class="story-ring"><img class="story-avatar" src="${s.avatar}" alt="${s.name}"></div>
+    <div class="story-name">${s.name}</div>`;
+  chip.onclick = ()=>{ if (s.segments && s.segments.length) openViewerByStoryId(s.id);
+                       else alert('Bu kullanıcıda hikâye yok.'); };
   $stories.appendChild(chip);
 });
 
-/* --------------------------
-   3) FEED RENDER
----------------------------*/
 const $feed = document.getElementById('feed');
 FEED.forEach(p=>{
   const card = document.createElement('article');
   card.className = 'card';
   card.innerHTML = `
-    <div class="head">
-      <img src="${p.avatar}" alt="${p.user}">
-      <div class="user">${p.user}</div>
-      <div class="time">${p.time}</div>
-    </div>
+    <div class="head"><img src="${p.avatar}" alt="${p.user}">
+      <div class="user">${p.user}</div><div class="time">${p.time}</div></div>
     <img class="media" src="${p.img}" alt="">
-    <div class="actions">
-      <span class="icon like">❤️</span>
-      <span class="icon">💬</span>
-      <span class="icon">↗</span>
-    </div>
-  `;
-  const likeBtn = card.querySelector('.like');
-  let liked=false, likes=p.likes||0;
-  likeBtn.onclick=()=>{
-    liked=!liked; likes += liked?1:-1;
-    likeBtn.textContent = liked ? '💖' : '❤️';
-  };
+    <div class="actions"><span class="icon like">❤️</span><span class="icon">💬</span><span class="icon">↗</span></div>`;
+  const likeBtn = card.querySelector('.like'); let liked=false, likes=p.likes||0;
+  likeBtn.onclick=()=>{ liked=!liked; likes += liked?1:-1; likeBtn.textContent = liked ? '💖' : '❤️'; };
   $feed.appendChild(card);
 });
 
-/* --------------------------
-   4) STORY VIEWER
----------------------------*/
 const viewer   = document.getElementById('viewer');
 const video    = document.getElementById('storyVideo');
 const progress = document.getElementById('progress');
@@ -264,185 +213,64 @@ const vName    = document.getElementById('vName');
 const vAvatar  = document.getElementById('vAvatar');
 const vTime    = document.getElementById('vTime');
 const btnClose = document.getElementById('btnClose');
+const btnSound = document.getElementById('btnSound');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
-
-/* tek seferlik: tap bölgeleri */
 tapRight.addEventListener('click', ()=> nextSegment());
 tapLeft .addEventListener('click',  ()=> prevSegment());
 
-let curStoryIndex = 0;
-let curSegIndex   = 0;
-let timerId       = null;
+let curStoryIndex = 0, curSegIndex = 0, timerId = null;
 
-/* ufak ses bildirimi (opsiyonel) */
-const soundToast = document.createElement('div');
-soundToast.className = 'sound-toast';
-soundToast.textContent = '🔊 Ses açıldı';
-viewer.appendChild(soundToast);
-function showToast(){ soundToast.classList.add('show'); setTimeout(()=>soundToast.classList.remove('show'), 1200); }
-
-/* URL var mı hızlı kontrol (GitHub Pages HEAD’e izin veriyor) */
-async function exists(url){
-  try{ const r = await fetch(url, {method:'HEAD'}); return r.ok; }catch{ return false; }
+function showToast(msg){
+  const toast = document.createElement('div');
+  toast.className = 'sound-toast'; toast.textContent = msg;
+  viewer.appendChild(toast); setTimeout(()=>toast.classList.add('show'),10);
+  setTimeout(()=>toast.remove(),1500);
 }
+function updateSoundUI(){
+  btnSound.textContent = video.muted ? '🔇' : '🔊';
+  btnSound.setAttribute('aria-label', video.muted ? 'Sesi aç' : 'Sesi kapat');
+}
+btnSound.onclick = ()=>{ video.muted = !video.muted; if(!video.muted) video.volume = 1; updateSoundUI(); };
+video.addEventListener('volumechange', updateSoundUI);
 
-/* Segment kaynaklarını sırayla dene */
+async function exists(url){ try{ const r = await fetch(url,{method:'HEAD'}); return r.ok; }catch{ return false; } }
 async function tryPlaySegment(seg){
-  let candidates = Array.isArray(seg.sources) ? [...seg.sources] : [];
-  if(!candidates.length && seg.src){
-    candidates.push(seg.src);
-    if(seg.src.endsWith('.mp4')){
-      const base = seg.src.replace(/\.mp4$/i,'');
-      candidates.push(base + '_h264.mp4');
-      candidates.push(base + '.webm');
-    }
-  }
-  for(const url of candidates){
-    if(!(await exists(url))) continue;
-    video.src = url;
-    video.currentTime = 0;
-    video.muted = true;  // autoplay kuralı
-    try{ await video.play(); }catch(e){ /* ilk dokunuşta oynar */ }
-    return true;
-  }
+  let candidates = seg.sources ? [...seg.sources] : (seg.src?[seg.src]:[]);
+  for(const url of candidates){ if(!(await exists(url))) continue;
+    video.src=url; video.currentTime=0; video.muted=true;
+    try{ await video.play(); }catch{} return true; }
   return false;
 }
-
 function findStoryIndexById(id){ return STORIES.findIndex(s=>s.id===id); }
 
 function openViewerByStoryId(id){
-  curStoryIndex = Math.max(0, findStoryIndexById(id));
-  curSegIndex   = 0;
-  viewer.classList.add('active');
-  viewer.setAttribute('aria-hidden','false');
-  document.documentElement.style.overflow='hidden';
-
-  // ilk kullanıcı etkileşiminde sesi otomatik aç
-  armSoundOnce();
-
+  curStoryIndex = Math.max(0, findStoryIndexById(id)); curSegIndex=0;
+  viewer.classList.add('active'); viewer.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow='hidden'; video.muted=true; updateSoundUI();
   loadCurrentSegment(true);
 }
-
-function closeViewer(){
-  viewer.classList.remove('active');
-  viewer.setAttribute('aria-hidden','true');
-  clearTimer();
-  try { video.pause(); } catch(e){}
-  document.documentElement.style.overflow='';
-}
+function closeViewer(){ viewer.classList.remove('active'); viewer.setAttribute('aria-hidden','true');
+  clearTimer(); try{ video.pause(); }catch{} document.documentElement.style.overflow=''; }
 btnClose.onclick = closeViewer;
 
-async function loadCurrentSegment(first=false){
-  const story = STORIES[curStoryIndex];
-  const segs  = story.segments || [];
-  if(!segs.length){ closeViewer(); return; }
-  const seg   = segs[curSegIndex];
-
-  // meta
-  vName.textContent = story.name;
-  vAvatar.src = story.avatar;
-  vTime.textContent = 'şimdi';
-
-  // progress
-  renderProgress(segs.length, curSegIndex);
-
-  // video
-  clearTimer();
-  const ok = await tryPlaySegment(seg);
-  if(!ok){ alert('Video yüklenemedi (yol/codec).'); nextSegment(); return; }
-
-  video.onended = nextSegment;
-  startTimer((seg.dur || 7) * 1000);
+async function loadCurrentSegment(){
+  const story = STORIES[curStoryIndex]; const seg = story.segments[curSegIndex]; if(!seg){ closeViewer(); return; }
+  vName.textContent = story.name; vAvatar.src = story.avatar; vTime.textContent = 'şimdi'; renderProgress(story.segments.length,curSegIndex);
+  clearTimer(); const ok=await tryPlaySegment(seg); if(!ok){ nextSegment(); return; }
+  video.onended = nextSegment; startTimer((seg.dur||7)*1000);
 }
+function renderProgress(total,activeIndex){ progress.innerHTML=''; for(let i=0;i<total;i++){ const seg=document.createElement('div'); seg.className='seg'; seg.innerHTML=`<i style="width:${i<activeIndex?100:0}%"></i>`; progress.appendChild(seg);} }
+function startTimer(ms){ const start=performance.now(); const segBar=progress.children[curSegIndex].firstElementChild;
+  function tick(now){ const pct=Math.min(100,((now-start)/ms)*100); segBar.style.width=pct+'%'; if(pct>=100){ nextSegment(); return;} timerId=requestAnimationFrame(tick);} timerId=requestAnimationFrame(tick);}
+function clearTimer(){ if(timerId){ cancelAnimationFrame(timerId); timerId=null;} }
 
-function renderProgress(total, activeIndex){
-  progress.innerHTML = '';
-  for(let i=0;i<total;i++){
-    const seg = document.createElement('div');
-    seg.className='seg';
-    seg.innerHTML = `<i style="width:${i < activeIndex ? 100 : (i===activeIndex?0:0)}%"></i>`;
-    progress.appendChild(seg);
-  }
-}
-function startTimer(ms){
-  const start = performance.now();
-  const segBar = progress.children[curSegIndex].firstElementChild;
-  function tick(now){
-    const elapsed = now - start;
-    const pct = Math.min(100, (elapsed / ms) * 100);
-    segBar.style.width = pct + '%';
-    if(pct >= 100){ nextSegment(); return; }
-    timerId = requestAnimationFrame(tick);
-  }
-  timerId = requestAnimationFrame(tick);
-}
-function clearTimer(){ if(timerId){ cancelAnimationFrame(timerId); timerId=null; } }
+function nextSegment(){ const s=STORIES[curStoryIndex]; if(curSegIndex<s.segments.length-1){ curSegIndex++; loadCurrentSegment(); } else nextStory(); }
+function prevSegment(){ if(curSegIndex>0){ curSegIndex--; loadCurrentSegment(); } else prevStory(true); }
+function nextStory(){ if(curStoryIndex<STORIES.length-1 && STORIES[curStoryIndex+1].segments.length){ curStoryIndex++; curSegIndex=0; loadCurrentSegment(true);} else closeViewer();}
+function prevStory(fromHead=false){ if(curStoryIndex>0 && STORIES[curStoryIndex-1].segments.length){ curStoryIndex--; curSegIndex=fromHead?STORIES[curStoryIndex].segments.length-1:0; loadCurrentSegment(true);} }
 
-/* geçişler */
-function nextSegment(){
-  const story = STORIES[curStoryIndex];
-  if(curSegIndex < (story.segments.length - 1)){ curSegIndex++; loadCurrentSegment(); }
-  else { nextStory(); }
-}
-function prevSegment(){
-  if(curSegIndex > 0){ curSegIndex--; loadCurrentSegment(); }
-  else { prevStory(true); }
-}
-function nextStory(){
-  // sonraki hikâyede segment yoksa kapat
-  if(curStoryIndex < (STORIES.length - 1) && STORIES[curStoryIndex+1].segments.length){
-    curStoryIndex++; curSegIndex=0; loadCurrentSegment(true);
-  }else{ closeViewer(); }
-}
-function prevStory(fromHead=false){
-  if(curStoryIndex > 0 && STORIES[curStoryIndex-1].segments.length){
-    curStoryIndex--; curSegIndex = fromHead ? STORIES[curStoryIndex].segments.length-1 : 0;
-    loadCurrentSegment(true);
-  }
-}
-
-/* klavye (opsiyonel) */
-document.addEventListener('keydown', (e)=>{
-  if(!viewer.classList.contains('active')) return;
-  if(e.key==='ArrowRight') nextSegment();
-  if(e.key==='ArrowLeft')  prevSegment();
-  if(e.key==='Escape')     closeViewer();
-});
-
-/* aşağı kaydırarak kapat */
-let startY=null;
-document.getElementById('stage').addEventListener('touchstart', (e)=>{ startY = e.touches[0].clientY; }, {passive:true});
-document.getElementById('stage').addEventListener('touchmove', (e)=>{
-  if(startY===null) return;
-  const dy = e.touches[0].clientY - startY;
-  if(dy > 90){ closeViewer(); startY=null; }
-}, {passive:true});
-document.getElementById('stage').addEventListener('touchend', ()=>{ startY=null; });
-
-/* yorum mock */
-document.getElementById('btnComment').onclick = ()=>{
-  const txt = prompt('Yorum yaz:');
-  if (txt) alert('Yorum gönderildi (mock): ' + txt);
-};
-
-/* SES: ilk kullanıcı etkileşiminde otomatik aç (muted başlar) */
-let soundArmed=false, hasSound=false;
-function armSoundOnce(){
-  if (soundArmed || hasSound) return;
-  soundArmed = true;
-  const onAnyTap = ()=>{
-    if (!hasSound) { video.muted = false; video.volume = 1; hasSound = true; showToast(); }
-    document.removeEventListener('click', onAnyTap, {capture:true});
-    document.removeEventListener('touchstart', onAnyTap, {capture:true});
-  };
-  document.addEventListener('click', onAnyTap, {capture:true});
-  document.addEventListener('touchstart', onAnyTap, {capture:true, passive:true});
-}
-
-/* Dışarıdan çağırmak istersen:
-   openViewerByStoryId('u1');
-*/
+document.getElementById('btnComment').onclick = ()=>{ const txt=prompt('Yorum yaz:'); if(txt) alert('Yorum gönderildi (mock): '+txt); };
 </script>
 </body>
 </html>
