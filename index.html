@@ -345,6 +345,8 @@ const btnMute  = document.getElementById('btnMute');
 const btnPause = document.getElementById('btnPause');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
+tapRight.addEventListener('click', ()=> nextSegment());
+tapLeft .addEventListener('click',  ()=> prevSegment());
 
 let curStoryIndex = 0;
 let curSegIndex   = 0;
