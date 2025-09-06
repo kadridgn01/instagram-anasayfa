@@ -83,132 +83,55 @@ body{
 .nav-item{display:flex; flex-direction:column; align-items:center; font-size:20px}
 .nav-item span{font-size:12px; color:var(--muted); margin-top:2px}
 
-/* STORY VIEWER (modal) */
-.viewer{
-  position:fixed; inset:0; z-index:100; display:none;
-  background:#000;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-}
+/* === STORY VIEWER (tam ekran overlay) === */
+.viewer{ position: fixed; inset: 0; z-index: 100; display:none; background:#000; padding:0; }
 .viewer.active{display:block}
-.viewer-inner{ height:100%; display:grid; grid-template-rows:auto 1fr auto; }
-.viewer-top{ padding:10px 12px; position:relative; }
-.progress{ display:flex; gap:6px; position:absolute; left:0; right:0; top:0; padding:10px 12px; }
-.seg{ flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden; }
-.seg > i{ display:block; height:100%; width:0%; background:#fff; transition:width .2s linear; }
-.viewer-meta{ display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
-.viewer-meta img{width:32px; height:32px; border-radius:50%; border:2px solid rgba(255,255,255,.35); object-fit:cover}
-.viewer-close{ margin-left:auto; appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff;
-  padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer; }
-
-/* Video alanı */
-.viewer-stage{ position:relative; overflow:hidden; display:grid; place-items:center; }
-.story-video{ width:100%; height:100%; object-fit:cover; max-height:100vh; background:#000; }
+.viewer-inner{ position: relative; height: 100%; }
+.viewer-stage{ position: absolute; inset: 0; height: 100svh; overflow:hidden; display:grid; place-items:center; }
+.story-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; background:#000; }
 .tapzone{ position:absolute; top:0; bottom:0; width:50%; }
 .tapzone.left{left:0} .tapzone.right{right:0}
 
-/* Bottom controls */
-.viewer-bottom{
-  display:flex; align-items:center; justify-content:space-between; padding:10px 12px; color:#fff;
-  background: linear-gradient(180deg, transparent, rgba(0,0,0,.35));
-}
-.ctrl{appearance:none; border:0; background:rgba(0,0,0,.35); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer}
-.small{font-size:13px; opacity:.85}
-
-/* === STORY FULLSCREEN PATCH === */
-.viewer{
-  position: fixed; inset: 0; z-index: 100;
-  background:#000;
-  padding: 0;
-}
-.viewer-inner{ position: relative; height: 100%; }
-.viewer-stage{
-  position: absolute; inset: 0;
-  height: 100svh;
-  overflow: hidden; display: grid; place-items: center;
-}
-.story-video{
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit: cover;
-  object-position: center;
-  background:#000;
-}
-.viewer-top,
-.viewer-bottom{
-  position: absolute; left:0; right:0; z-index: 2;
-  pointer-events: none;
+.viewer-top, .viewer-bottom{
+  position:absolute; left:0; right:0; z-index:2; pointer-events:none;
 }
 .viewer-top{
-  top: 0;
-  padding: 10px 12px;
+  top:0; padding:10px 12px;
   padding-top: calc(10px + env(safe-area-inset-top, 0px));
   background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
 }
 .viewer-bottom{
-  bottom: 0;
-  padding: 10px 12px;
+  bottom:0; padding:10px 12px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(0deg, rgba(0,0,0,.55), transparent);
 }
 .viewer-top *,.viewer-bottom *{ pointer-events:auto; }
-.progress{
-  position: absolute; left:0; right:0;
-  top: calc(env(safe-area-inset-top, 0px) + 6px);
-  padding: 0 12px;
-  display:flex; gap:6px;
-}
 
-/* STORY HEADER DENGELİ BOYUTLAR */
-.viewer-meta img{
-  width: 40px;     /* 32px yerine 40px → daha büyük ama çok değil */
-  height: 40px;
-  border-width: 2px;
-}
+/* story header */
+.progress{ position:absolute; left:0; right:0; top:calc(env(safe-area-inset-top, 0px) + 4px); padding:0 12px; display:flex; gap:6px; height:3px; }
+.seg{ flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:2px; overflow:hidden; }
+.seg > i{ display:block; height:100%; width:0%; background:#fff; transition:width .2s linear; }
 
-#vName{
-  font-size: 16px;   /* 18px değil, daha dengeli */
-  font-weight: 700;
-}
+.viewer-meta{ display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+.viewer-meta img{ width:40px; height:40px; border-radius:50%; border:2px solid rgba(255,255,255,.35); object-fit:cover }
+#vName{ font-size:16px; font-weight:700; }
+#vTime{ font-size:13px; opacity:.8; }
 
-#vTime{
-  font-size: 13px;   /* küçük kalsın */
-  opacity: 0.8;
-}
-
-/* Progress bar biraz daha yukarı ve ince */
-.progress{
-  top: calc(env(safe-area-inset-top, 0px) + 4px);
-  height: 3px;
-}
-.seg{ height:3px; }
-
-/* Alt yorum barı */
-.commentbar{
-  position:absolute; left:0; right:0; bottom:0;
-  padding: 10px 12px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(0deg, rgba(0,0,0,.55), transparent);
-  display:flex; justify-content:center; align-items:center; gap:12px;
-}
+/* alt: yorum kapsülü */
+.commentbar{ display:flex; justify-content:center; align-items:center; gap:12px; }
 .comment-pill{
-  appearance:none; border:0; cursor:pointer;
-  padding:10px 14px; border-radius:999px;
-  font-weight:700; font-size:14px;
-  color:#e7e9ee; background:rgba(0,0,0,.35);
-  backdrop-filter: blur(6px);
+  appearance:none; border:0; cursor:pointer; padding:10px 14px; border-radius:999px;
+  font-weight:700; font-size:14px; color:#e7e9ee; background:rgba(0,0,0,.35); backdrop-filter: blur(6px);
 }
 .comment-pill:active{ transform:translateY(1px); }
 
-/* ufak ses “toast” balonu */
+/* küçük ses bildirimi */
 .sound-toast{
   position:absolute; left:12px; bottom:calc(70px + env(safe-area-inset-bottom, 0px));
   background:rgba(0,0,0,.6); color:#fff; padding:8px 10px; border-radius:10px;
   font-size:12px; opacity:0; pointer-events:none; transition:opacity .25s;
 }
 .sound-toast.show{ opacity:1; }
-
-/* === END PATCH === */
 </style>
 </head>
 <body>
@@ -244,7 +167,7 @@ body{
       <div class="viewer-meta">
         <img id="vAvatar" src="" alt="">
         <div>
-          <div id="vName" style="font-weight:700"></div>
+          <div id="vName"></div>
           <div id="vTime" class="small">şimdi</div>
         </div>
         <button class="viewer-close" id="btnClose">✕</button>
@@ -258,51 +181,26 @@ body{
     </div>
 
     <div class="viewer-bottom commentbar" id="commentBar">
-  <button class="comment-pill" id="btnComment">💬 Yorum yap</button>
-</div>
+      <button class="comment-pill" id="btnComment">💬 Yorum yap</button>
+    </div>
   </div>
 </div>
 
 <script>
 /* --------------------------
-   1) VERİ: HİKÂYELER & FEED
+   1) VERİ
 ---------------------------*/
 const STORIES = [
-  {
-    id:"me",
-    name:"Sen",
-    avatar:"assets/me.jpg",
-  },
-  {
-    id:"u1",
-    name:"Peri",
-    avatar:"assets/peri.jpg",
-    segments:[
-      // İstersen 'sources' ile birden fazla format ver:
-      // { sources:["assets/stories/u1/1_h264.mp4","assets/stories/u1/1.webm"], dur:8, caption:"Yorum yap" }
-      { src:"assets/1_h264.mp4", dur:8, caption:"Yorum yap" }
-    ]
-  },
-  {
-    id:"u2",
-    name:"Selim",
-    avatar:"assets/selim-av.jpg",
-  },
-  {
-    id:"u2",
-    name:"Mert",
-    avatar:"assets/mert-av.jpg",
-  },
-  {
-    id:"u2",
-    name:"Ayça",
-    avatar:"assets/ayca-av.jpg",
-  },
+  { id:"me",  name:"Sen",  avatar:"assets/me.jpg",  segments:[] },
+  { id:"u1",  name:"Peri", avatar:"assets/peri.jpg",
+    segments:[ { sources:["assets/1_h264.mp4","assets/1.webm"], dur:8, caption:"Yorum yap" } ] },
+  { id:"u2",  name:"Selim", avatar:"assets/peri.jpg", segments:[] },  // örnek: segments boş ise tıklayınca açmaz
+  { id:"u3",  name:"Mert",  avatar:"assets/me.jpg",   segments:[] },
 ];
 
 const FEED = [
-  { user:"kadridgn",  avatar:"assets/kadri-av.jpg", img:"assets/kadri.jpg", time:"2s", likes:42 },
-  { user:"okanerdemt", avatar:"assets/okan-av.jpg", img:"assets/okan.jpg", time:"1g",  likes:87 },
+  { user:"Peri",  avatar:"assets/peri.jpg", img:"assets/peri.jpg", time:"2s", likes:42 },
+  { user:"Sen",   avatar:"assets/me.jpg",   img:"assets/me.jpg",   time:"1g",  likes:87 },
 ];
 
 /* --------------------------
@@ -319,12 +217,15 @@ STORIES.forEach(s=>{
     </div>
     <div class="story-name">${s.name}</div>
   `;
-  chip.onclick = ()=> openViewerByStoryId(s.id);
+  chip.onclick = ()=>{
+    if (s.segments && s.segments.length) openViewerByStoryId(s.id);
+    else alert('Bu kullanıcıda hikâye yok.');
+  };
   $stories.appendChild(chip);
 });
 
 /* --------------------------
-   3) FEED RENDER
+   3) FEED RENDER (örnek)
 ---------------------------*/
 const $feed = document.getElementById('feed');
 FEED.forEach(p=>{
@@ -353,7 +254,7 @@ FEED.forEach(p=>{
 });
 
 /* --------------------------
-   4) STORY VIEWER + GÜVENLİ VIDEO YÜKLEME
+   4) STORY VIEWER
 ---------------------------*/
 const viewer   = document.getElementById('viewer');
 const video    = document.getElementById('storyVideo');
@@ -361,34 +262,29 @@ const progress = document.getElementById('progress');
 const vName    = document.getElementById('vName');
 const vAvatar  = document.getElementById('vAvatar');
 const vTime    = document.getElementById('vTime');
-const vCaption = document.getElementById('vCaption');
 const btnClose = document.getElementById('btnClose');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
-tapRight.addEventListener('click', ()=> nextSegment());
-tapLeft .addEventListener('click',  ()=> prevSegment());
 
 let curStoryIndex = 0;
 let curSegIndex   = 0;
 let timerId       = null;
-let playing       = true;
 
-/* ---- küçük debug ---- */
-function toast(msg){
-  console.log('[story]', msg);
-}
+/* küçük bildirim: ses açıldı */
+const soundToast = document.createElement('div');
+soundToast.className = 'sound-toast';
+soundToast.textContent = '🔊 Ses açıldı';
+viewer.appendChild(soundToast);
+function showToast(){ soundToast.classList.add('show'); setTimeout(()=>soundToast.classList.remove('show'), 1200); }
 
 /* URL var mı hızlı kontrol (GitHub Pages HEAD’e izin veriyor) */
 async function exists(url){
   try{ const r = await fetch(url, {method:'HEAD'}); return r.ok; }catch{ return false; }
 }
 
-/* Bu segment için oynatılabilir kaynağı bul ve çalıştır */
+/* Segment kaynaklarını sırayla dene */
 async function tryPlaySegment(seg){
-  // 1) Eğer seg.sources varsa onu kullan
   let candidates = Array.isArray(seg.sources) ? [...seg.sources] : [];
-
-  // 2) Yoksa seg.src’den türev oluştur (örn. 1.mp4 → 1_h264.mp4, 1.webm)
   if(!candidates.length && seg.src){
     candidates.push(seg.src);
     if(seg.src.endsWith('.mp4')){
@@ -397,30 +293,18 @@ async function tryPlaySegment(seg){
       candidates.push(base + '.webm');
     }
   }
-
-  // 3) Sırayla dene
   for(const url of candidates){
-    if(!(await exists(url))) { toast('bulunamadı: '+url); continue; }
-    // kaynakları <source> ile set etmek istemezsek direkt src veriyoruz:
+    if(!(await exists(url))) continue;
     video.src = url;
     video.currentTime = 0;
-    video.muted = true;
-    try{
-      await video.play();
-      toast('oynatılıyor: '+url);
-      return true;
-    }catch(e){
-      toast('autoplay engeli: '+url);
-      // kullanıcı tıklayınca başlayacak; yine de bu kaynağı kabul edelim
-      return true;
-    }
+    video.muted = true;  // autoplay kuralı
+    try{ await video.play(); }catch(e){ /* ilk dokunuşta oynar */ }
+    return true;
   }
   return false;
 }
 
-function findStoryIndexById(id){
-  return STORIES.findIndex(s=>s.id===id);
-}
+function findStoryIndexById(id){ return STORIES.findIndex(s=>s.id===id); }
 
 function openViewerByStoryId(id){
   curStoryIndex = Math.max(0, findStoryIndexById(id));
@@ -428,6 +312,10 @@ function openViewerByStoryId(id){
   viewer.classList.add('active');
   viewer.setAttribute('aria-hidden','false');
   document.documentElement.style.overflow='hidden';
+
+  // ilk kullanıcı etkileşiminde sesi otomatik aç
+  armSoundOnce();
+
   loadCurrentSegment(true);
 }
 
@@ -438,38 +326,28 @@ function closeViewer(){
   try { video.pause(); } catch(e){}
   document.documentElement.style.overflow='';
 }
-
 btnClose.onclick = closeViewer;
 
 async function loadCurrentSegment(first=false){
   const story = STORIES[curStoryIndex];
-  const segs  = story.segments;
+  const segs  = story.segments || [];
+  if(!segs.length){ closeViewer(); return; }
   const seg   = segs[curSegIndex];
 
   // meta
   vName.textContent = story.name;
   vAvatar.src = story.avatar;
   vTime.textContent = 'şimdi';
-  vCaption.textContent = seg.caption || '';
 
-  // progress bar
+  // progress
   renderProgress(segs.length, curSegIndex);
 
   // video
   clearTimer();
-  playing = true;
-  btnPause.textContent = '⏸︎ Duraklat';
-
   const ok = await tryPlaySegment(seg);
-  if(!ok){
-    alert('Video yüklenemedi (yol/codec). Lütfen H.264 + AAC yüklendiğinden emin ol.');
-    nextSegment(); // geç
-    return;
-  }
+  if(!ok){ alert('Video yüklenemedi (yol/codec).'); nextSegment(); return; }
 
   video.onended = nextSegment;
-
-  // emniyet kemeri: video ended gelmezse süreye göre
   startTimer((seg.dur || 7) * 1000);
 }
 
@@ -482,7 +360,6 @@ function renderProgress(total, activeIndex){
     progress.appendChild(seg);
   }
 }
-
 function startTimer(ms){
   const start = performance.now();
   const segBar = progress.children[curSegIndex].firstElementChild;
@@ -497,67 +374,41 @@ function startTimer(ms){
 }
 function clearTimer(){ if(timerId){ cancelAnimationFrame(timerId); timerId=null; } }
 
+/* geçişler */
 function nextSegment(){
   const story = STORIES[curStoryIndex];
-  if(curSegIndex < story.segments.length - 1){
-    curSegIndex++;
-    loadCurrentSegment();
-  }else{
-    nextStory();
-  }
+  if(curSegIndex < (story.segments.length - 1)){ curSegIndex++; loadCurrentSegment(); }
+  else { nextStory(); }
 }
 function prevSegment(){
-  if(curSegIndex > 0){
-    curSegIndex--;
-    loadCurrentSegment();
-  }else{
-    prevStory(true);
-  }
+  if(curSegIndex > 0){ curSegIndex--; loadCurrentSegment(); }
+  else { prevStory(true); }
 }
 function nextStory(){
-  if(curStoryIndex < STORIES.length - 1){
+  if(curStoryIndex < (STORIES.length - 1) && STORIES[curStoryIndex+1].segments.length){
     curStoryIndex++; curSegIndex=0; loadCurrentSegment(true);
-  }else{
-    closeViewer();
-  }
+  }else{ closeViewer(); }
 }
 function prevStory(fromHead=false){
-  if(curStoryIndex > 0){
+  if(curStoryIndex > 0 && STORIES[curStoryIndex-1].segments.length){
     curStoryIndex--; curSegIndex = fromHead ? STORIES[curStoryIndex].segments.length-1 : 0;
     loadCurrentSegment(true);
   }
 }
 
-/* Tap bölgeleri */
+/* ekran sağ/sol */
 tapRight.addEventListener('click', ()=> nextSegment());
 tapLeft .addEventListener('click',  ()=> prevSegment());
 
-/* Pause / Play */
-btnPause.onclick = ()=>{
-  if(playing){
-    video.pause(); clearTimer(); playing=false; btnPause.textContent='▶︎ Oynat';
-  }else{
-    video.play(); startTimer( (STORIES[curStoryIndex].segments[curSegIndex].dur || 7) * 1000 ); playing=true; btnPause.textContent='⏸︎ Duraklat';
-  }
-};
-
-/* Mute */
-btnMute.onclick = ()=>{
-  video.muted = !video.muted;
-  btnMute.textContent = video.muted ? '🔇 Ses' : '🔊 Ses';
-};
-
-/* Klavye (desktop) */
+/* klavye */
 document.addEventListener('keydown', (e)=>{
   if(!viewer.classList.contains('active')) return;
   if(e.key==='ArrowRight') nextSegment();
   if(e.key==='ArrowLeft')  prevSegment();
   if(e.key==='Escape')     closeViewer();
-  if(e.key===' ')          btnPause.click();
-  if(e.key==='m' || e.key==='M') btnMute.click();
 });
 
-/* Touch swipe to close (aşağı çek) */
+/* aşağı kaydırarak kapat */
 let startY=null;
 document.getElementById('stage').addEventListener('touchstart', (e)=>{ startY = e.touches[0].clientY; }, {passive:true});
 document.getElementById('stage').addEventListener('touchmove', (e)=>{
@@ -567,91 +418,27 @@ document.getElementById('stage').addEventListener('touchmove', (e)=>{
 }, {passive:true});
 document.getElementById('stage').addEventListener('touchend', ()=>{ startY=null; });
 
-function nextSegment(){
-  const story = STORIES[curStoryIndex];
-  if(curSegIndex < story.segments.length - 1){
-    curSegIndex++;
-    loadCurrentSegment();
-  }else{
-    nextStory();
-  }
-}
-function prevSegment(){
-  if(curSegIndex > 0){
-    curSegIndex--;
-    loadCurrentSegment();
-  }else{
-    prevStory(true);
-  }
-}
-function nextStory(){
-  if(curStoryIndex < STORIES.length - 1){
-    curStoryIndex++; curSegIndex=0;
-    loadCurrentSegment(true);
-  }else{
-    closeViewer();
-  }
-}
-function prevStory(fromHead=false){
-  if(curStoryIndex > 0){
-    curStoryIndex--;
-    curSegIndex = fromHead ? STORIES[curStoryIndex].segments.length-1 : 0;
-    loadCurrentSegment(true);
-  }
-}
+/* yorum mock */
+document.getElementById('btnComment').onclick = ()=>{
+  const txt = prompt('Yorum yaz:');
+  if (txt) alert('Yorum gönderildi (mock): ' + txt);
+};
 
-// --- SES: ilk kullanıcı etkileşiminde otomatik aç ---
-let soundArmed = false;   // ilk tap’te sesi açmak için
-let hasSound   = false;   // ses şu an açık mı?
-
-// ufak bildirim
-const toast = document.createElement('div');
-toast.className = 'sound-toast';
-toast.textContent = '🔊 Ses açıldı';
-document.querySelector('.viewer').appendChild(toast);
-function showToast(){ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1200); }
-
-// herhangi bir kullanıcı dokunuşunu ses açma sinyali olarak kullan
+/* SES: ilk kullanıcı etkileşiminde otomatik aç */
+let soundArmed=false, hasSound=false;
 function armSoundOnce(){
   if (soundArmed || hasSound) return;
   soundArmed = true;
   const onAnyTap = ()=>{
     if (!hasSound) {
-      video.muted = false;
-      video.volume = 1;
-      hasSound = true;
-      showToast();
+      video.muted = false; video.volume = 1; hasSound = true; showToast();
     }
-    // bir kere yeter
     document.removeEventListener('click', onAnyTap, {capture:true});
     document.removeEventListener('touchstart', onAnyTap, {capture:true});
   };
-  // capture aşamasında dinle ki sağ/sol tıklamalarla beraber çalışsın
   document.addEventListener('click', onAnyTap, {capture:true});
   document.addEventListener('touchstart', onAnyTap, {capture:true, passive:true});
 }
-
-function openViewerByStoryId(id){
-  curStoryIndex = Math.max(0, findStoryIndexById(id));
-  curSegIndex   = 0;
-  viewer.classList.add('active');
-  viewer.setAttribute('aria-hidden','false');
-  document.documentElement.style.overflow='hidden';
-
-  // ses: autoplay gereği muted başlıyoruz; ilk etkileşimde açacağız
-  video.muted = true;
-  hasSound = false;
-  soundArmed = false;
-  armSoundOnce();
-
-  loadCurrentSegment(true);
-}
-tapRight.addEventListener('click', ()=> nextSegment());
-tapLeft .addEventListener('click',  ()=> prevSegment());
-document.getElementById('btnComment').onclick = ()=>{
-  const txt = prompt('Yorum yaz:');
-  if (txt) alert('Yorum gönderildi (mock): ' + txt);
-};
 
 /* Dışarıdan çağırmak istersen:
    openViewerByStoryId('u1');
