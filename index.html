@@ -159,28 +159,30 @@ body{
   display:flex; gap:6px;
 }
 
-/* STORY HEADER BÜYÜTME */
+/* STORY HEADER DENGELİ BOYUTLAR */
 .viewer-meta img{
-  width: 48px;     /* 32px → 48px */
-  height: 48px;
+  width: 40px;     /* 32px yerine 40px → daha büyük ama çok değil */
+  height: 40px;
   border-width: 2px;
 }
 
 #vName{
-  font-size: 18px;   /* kullanıcı adı daha büyük */
+  font-size: 16px;   /* 18px değil, daha dengeli */
   font-weight: 700;
 }
 
 #vTime{
-  font-size: 15px;   /* "şimdi" yazısı biraz daha büyük */
-  opacity: 0.85;
+  font-size: 13px;   /* küçük kalsın */
+  opacity: 0.8;
 }
 
+/* Progress bar biraz daha yukarı ve ince */
 .progress{
-  top: calc(env(safe-area-inset-top, 0px) + 14px); /* çubuk biraz aşağı */
-  height: 4px;  /* kalınlaştır */
+  top: calc(env(safe-area-inset-top, 0px) + 4px);
+  height: 3px;
 }
-.seg{ height:4px; }
+.seg{ height:3px; }
+
 
 /* === END PATCH === */
 </style>
