@@ -183,6 +183,30 @@ body{
 }
 .seg{ height:3px; }
 
+/* Alt yorum barı */
+.commentbar{
+  position:absolute; left:0; right:0; bottom:0;
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(0deg, rgba(0,0,0,.55), transparent);
+  display:flex; justify-content:center; align-items:center; gap:12px;
+}
+.comment-pill{
+  appearance:none; border:0; cursor:pointer;
+  padding:10px 14px; border-radius:999px;
+  font-weight:700; font-size:14px;
+  color:#e7e9ee; background:rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+.comment-pill:active{ transform:translateY(1px); }
+
+/* ufak ses “toast” balonu */
+.sound-toast{
+  position:absolute; left:12px; bottom:calc(70px + env(safe-area-inset-bottom, 0px));
+  background:rgba(0,0,0,.6); color:#fff; padding:8px 10px; border-radius:10px;
+  font-size:12px; opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.sound-toast.show{ opacity:1; }
 
 /* === END PATCH === */
 </style>
@@ -233,11 +257,9 @@ body{
       <div class="tapzone right" id="tapRight"></div>
     </div>
 
-    <div class="viewer-bottom">
-      <button class="ctrl" id="btnMute">🔇 Ses</button>
-      <div class="small" id="vCaption"></div>
-      <button class="ctrl" id="btnPause">⏸︎ Duraklat</button>
-    </div>
+    <div class="viewer-bottom commentbar" id="commentBar">
+  <button class="comment-pill" id="btnComment">💬 Yorum yap</button>
+</div>
   </div>
 </div>
 
@@ -341,8 +363,6 @@ const vAvatar  = document.getElementById('vAvatar');
 const vTime    = document.getElementById('vTime');
 const vCaption = document.getElementById('vCaption');
 const btnClose = document.getElementById('btnClose');
-const btnMute  = document.getElementById('btnMute');
-const btnPause = document.getElementById('btnPause');
 const tapLeft  = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
 tapRight.addEventListener('click', ()=> nextSegment());
@@ -579,6 +599,59 @@ function prevStory(fromHead=false){
     loadCurrentSegment(true);
   }
 }
+
+// --- SES: ilk kullanıcı etkileşiminde otomatik aç ---
+let soundArmed = false;   // ilk tap’te sesi açmak için
+let hasSound   = false;   // ses şu an açık mı?
+
+// ufak bildirim
+const toast = document.createElement('div');
+toast.className = 'sound-toast';
+toast.textContent = '🔊 Ses açıldı';
+document.querySelector('.viewer').appendChild(toast);
+function showToast(){ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1200); }
+
+// herhangi bir kullanıcı dokunuşunu ses açma sinyali olarak kullan
+function armSoundOnce(){
+  if (soundArmed || hasSound) return;
+  soundArmed = true;
+  const onAnyTap = ()=>{
+    if (!hasSound) {
+      video.muted = false;
+      video.volume = 1;
+      hasSound = true;
+      showToast();
+    }
+    // bir kere yeter
+    document.removeEventListener('click', onAnyTap, {capture:true});
+    document.removeEventListener('touchstart', onAnyTap, {capture:true});
+  };
+  // capture aşamasında dinle ki sağ/sol tıklamalarla beraber çalışsın
+  document.addEventListener('click', onAnyTap, {capture:true});
+  document.addEventListener('touchstart', onAnyTap, {capture:true, passive:true});
+}
+
+function openViewerByStoryId(id){
+  curStoryIndex = Math.max(0, findStoryIndexById(id));
+  curSegIndex   = 0;
+  viewer.classList.add('active');
+  viewer.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow='hidden';
+
+  // ses: autoplay gereği muted başlıyoruz; ilk etkileşimde açacağız
+  video.muted = true;
+  hasSound = false;
+  soundArmed = false;
+  armSoundOnce();
+
+  loadCurrentSegment(true);
+}
+tapRight.addEventListener('click', ()=> nextSegment());
+tapLeft .addEventListener('click',  ()=> prevSegment());
+document.getElementById('btnComment').onclick = ()=>{
+  const txt = prompt('Yorum yaz:');
+  if (txt) alert('Yorum gönderildi (mock): ' + txt);
+};
 
 /* Dışarıdan çağırmak istersen:
    openViewerByStoryId('u1');
